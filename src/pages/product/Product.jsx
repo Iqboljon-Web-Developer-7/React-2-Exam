@@ -1,22 +1,38 @@
 import { useGetProductQuery } from "@/redux/api/proucts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IoMdStarOutline } from "react-icons/io";
-import { BsCart2 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { add, cart } from "@/redux/slices/cart-slice";
+import { add, cart, update } from "@/redux/slices/cart-slice";
 import { useSearchParams } from "react-router-dom";
 import { IoCartOutline } from "react-icons/io5";
 
 const Product = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data } = useGetProductQuery({ id: searchParams.get("id") });
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState({ quantity: 1, idx: 0 });
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.value);
-  console.log(data);
-  console.log(cart);
+
+  useEffect(() => {
+    let changedObj = {};
+    let changedCart = cart.map((item) => {
+      let res;
+      if (item.id == quantity.idx) {
+        res = { ...item, quantity: quantity.quantity };
+        changedObj = { ...item, quantity: quantity.quantity };
+      } else {
+        res = item;
+      }
+      return res;
+    });
+
+    console.log("Changed cart", changedCart);
+
+    localStorage.setItem("cartList", JSON.stringify(changedCart));
+    dispatch(update(changedObj));
+  }, [quantity]);
 
   return (
     <section className="product wrapper">
@@ -64,15 +80,27 @@ const Product = () => {
             <div className="quantity flex items-center gap-10 mt-3">
               <div className="counter border-2 border-green-600 bg-slate-100 text-center flex items-center justify-center rounded-full">
                 <button
-                  onClick={() => setQuantity((p) => p - 1)}
-                  disabled={quantity <= 1}
+                  onClick={() =>
+                    setQuantity((p) => ({
+                      quantity: p.quantity - 1,
+                      idx: data?.id,
+                    }))
+                  }
+                  disabled={quantity.quantity <= 1}
                   className="text-2xl w-16 h-14 hover:bg-slate-200 duration-200 rounded-full"
                 >
                   -
                 </button>
-                <h2 className="text-2xl mt-1 font-Readex w-7">{quantity}</h2>
+                <h2 className="text-2xl mt-1 font-Readex w-7">
+                  {quantity.quantity}
+                </h2>
                 <button
-                  onClick={() => setQuantity((p) => p + 1)}
+                  onClick={() =>
+                    setQuantity((p) => ({
+                      quantity: p.quantity + 1,
+                      idx: data?.id,
+                    }))
+                  }
                   className="text-2xl w-16 h-14 hover:bg-slate-200 duration-200 rounded-full"
                 >
                   +

@@ -1,7 +1,7 @@
 import { remove } from "@/redux/slices/cart-slice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { LuMoveLeft } from "react-icons/lu";
 
@@ -80,7 +80,7 @@ const Cart = () => {
                 <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
                   <div className="mt-5 sm:mt-0">
                     <h2 className="text-lg font-bold text-gray-900">
-                      {item.name}
+                      <Link to={`/product?id=${item.id}`}>{item.name}</Link>
                     </h2>
                     <p
                       className="mt-1 text-xs text-gray-700 line-clamp-4"
@@ -144,13 +144,13 @@ const Cart = () => {
         <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 w-3/4 lg:w-1/3">
           <div className="mb-2 flex justify-between">
             <p className="text-gray-700">Subtotal</p>
-            <p className="text-gray-700">{total}</p>
+            <p className="text-gray-700">{total.toFixed(2)}</p>
           </div>
           <hr className="my-4" />
           <div className="flex justify-between">
             <p className="text-lg font-bold">Total</p>
             <div className="">
-              <p className="mb-1 text-lg font-bold">{total} USD</p>
+              <p className="mb-1 text-lg font-bold">{total.toFixed(2)} USD</p>
               <p className="text-sm text-gray-700">including VAT</p>
             </div>
           </div>

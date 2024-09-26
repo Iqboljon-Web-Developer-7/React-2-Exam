@@ -7,9 +7,6 @@ export const cart = createSlice({
   },
   reducers: {
     add: (state, action) => {
-      console.log(state.value);
-      console.log(action.payload);
-
       if (state.value.findIndex((item) => item.id == action.payload.id) < 1) {
         state.value = [...state.value, { ...action.payload, quantity: 1 }];
       }
@@ -20,11 +17,16 @@ export const cart = createSlice({
       localStorage.setItem("cartList", JSON.stringify(state.value));
     },
     update: (state, action) => {
+      console.log(action.payload);
+
       state.value = state.value.map((item, idx) =>
         item.id == action.payload.id
-          ? (state.value[idx] = action.payload.cart)
+          ? (state.value[idx] = action.payload)
           : item
       );
+      console.log(state.value);
+
+      localStorage.setItem("cartList", JSON.stringify(state.value));
     },
   },
 });
