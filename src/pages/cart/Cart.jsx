@@ -24,9 +24,6 @@ const Cart = () => {
           item.id == id ? { ...item, quantity: amount } : item
         );
     setCartItem(res);
-    console.log(res);
-
-    console.log(helper);
     dispatch(update(helper));
   };
 

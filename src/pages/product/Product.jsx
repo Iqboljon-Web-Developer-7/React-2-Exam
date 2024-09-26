@@ -29,7 +29,6 @@ const Product = () => {
       }
     });
 
-    console.log(changedObj);
     dispatch(update(changedObj));
   }, [quantity]);
 
@@ -42,6 +41,7 @@ const Product = () => {
         return item;
       }
     });
+    window.scroll(0, 0);
   }, []);
 
   return (

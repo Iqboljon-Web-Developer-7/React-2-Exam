@@ -7,9 +7,12 @@ import {
   useGetProductsQuery,
 } from "@/redux/api/proucts";
 import { cart } from "@/redux/slices/cart-slice";
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const Products = () => {
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [brandsUrl, setBrandsUrl] = useState("");
   const [colorsUrl, setColorsUrl] = useState("");
   const [prevColor, setPrevColor] = useState("");
@@ -20,13 +23,18 @@ const Products = () => {
   const [checkRating, setCheckRating] = useState("");
   const [checkPrice, setCheckPrice] = useState("");
   const { data, isFetching } = useGetProductsQuery({
-    page: 1,
-    limit: 8,
+    page,
+    limit: 6,
     brand: brandsUrl,
     color: colorsUrl,
     rating: checkRating,
     price: checkPrice,
   });
+  const { data: allData } = useGetProductsQuery({ limit: 99 });
+  useEffect(() => {
+    setTotal(allData?.length);
+    data.length < 6 && setTotal(1);
+  }, [allData, data]);
 
   const { data: brands } = useGetBrandsQuery();
   const { data: colors } = useGetColorsQuery();
@@ -84,7 +92,6 @@ const Products = () => {
       setCheckPrice("");
     }
   };
-
   return (
     <div>
       <Hero />
@@ -118,7 +125,7 @@ const Products = () => {
               ? data.map((product) => (
                   <ProductCard cart={cart} key={product.id} product={product} />
                 ))
-              : new Array(10).fill().map((_, idx) => (
+              : new Array(6).fill().map((_, idx) => (
                   <div
                     key={idx}
                     role="status"
@@ -159,6 +166,25 @@ const Products = () => {
                   </div>
                 ))}
           </div>
+        </div>
+        <div className="mt-6 py-4 md:w-2/3 ms-auto flex items-center justify-center gap-4 ">
+          <Button
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+            className=""
+          >
+            {isFetching ? "..." : "Prev"}
+          </Button>
+          <span>
+            Page: {page} / {Math.ceil(total / 6)}
+          </span>
+          <Button
+            disabled={total <= page * 6}
+            onClick={() => setPage((p) => p + 1)}
+            className=""
+          >
+            {isFetching ? "..." : "Next"}
+          </Button>
         </div>
       </div>
     </div>
