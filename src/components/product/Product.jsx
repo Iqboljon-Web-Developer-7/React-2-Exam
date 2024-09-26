@@ -8,9 +8,6 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.value);
 
-  console.log(product);
-  console.log(cart);
-
   return (
     <div className="bg-white p-4 rounded-lg mt-4 border-2 border-transparent hover:border-slate-200 hover:shadow-md duration-200">
       <img
@@ -18,7 +15,7 @@ const ProductCard = ({ product }) => {
         alt={product.name}
         className="w-full h-52 object-contain mt-2"
       />
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/product?id=${product.id}`}>
         <h3 className="font-bold text-lg mt-4 hover:underline">
           {product.name}
         </h3>
@@ -42,7 +39,8 @@ const ProductCard = ({ product }) => {
           "opacity-80 cursor-not-allowed"
         } text-white px-4 py-2 mt-4 rounded-md hover:bg-green-600 flex items-center justify-center gap-2`}
       >
-        <IoCartOutline /> Add to Cart
+        <IoCartOutline />
+        {cart.some((item) => item.id == product?.id) ? "Added" : "Add to Cart"}
       </button>
     </div>
   );

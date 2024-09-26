@@ -4,13 +4,19 @@ import React, { useState } from "react";
 import { IoMdStarOutline } from "react-icons/io";
 import { BsCart2 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { add } from "@/redux/slices/cart-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { add, cart } from "@/redux/slices/cart-slice";
+import { useSearchParams } from "react-router-dom";
+import { IoCartOutline } from "react-icons/io5";
 
 const Product = () => {
-  const { data } = useGetProductQuery({ id: 1 });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data } = useGetProductQuery({ id: searchParams.get("id") });
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.value);
+  console.log(data);
+  console.log(cart);
 
   return (
     <section className="product wrapper">
@@ -46,8 +52,9 @@ const Product = () => {
             <hr className="border-dashed border-black my-5" />
             <h2 className="text-2xl mt-1 font-Readex">Choose color</h2>
             <div className="flex gap-2 mt-4">
-              {data?.color_options.map((item) => (
+              {data?.color_options.map((item, idx) => (
                 <div
+                  key={idx}
                   className="w-14 h-14 rounded-full border-2"
                   style={{ backgroundColor: item }}
                 ></div>
@@ -78,10 +85,17 @@ const Product = () => {
             </div>
             <div className="add my-8 flex items-center justify-center gap-3">
               <button
+                disabled={cart.some((item) => item.id == data?.id)}
                 onClick={() => dispatch(add(data))}
-                className="bg-green-500 border-2 border-green-500 w-full text-white px-4 py-2 rounded-md hover:bg-green-600 flex items-center justify-center gap-2"
+                className={`bg-green-500 ${
+                  cart.some((item) => item.id == data?.id) &&
+                  "opacity-80 cursor-not-allowed"
+                } text-white px-4 py-2 w-full rounded-md hover:bg-green-600 flex items-center justify-center gap-2`}
               >
-                <BsCart2 /> Add to Cart
+                <IoCartOutline />{" "}
+                {cart.some((item) => item.id == data?.id)
+                  ? "Added"
+                  : "Add to Cart"}
               </button>
               <button className="px-4 h-full hover:bg-red-100 duration-200 hover:text-red-500 hover:border-transparent border-2 border-black rounded-md flex items-center justify-center gap-2">
                 <FaRegHeart className="text-2xl" />

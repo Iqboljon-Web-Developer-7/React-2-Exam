@@ -80,8 +80,6 @@ const Products = () => {
       setCheckPrice("&_sort=price");
       setCheckRating("");
     } else {
-      console.log(e);
-
       setCheckPrice("");
       setCheckPrice("");
     }

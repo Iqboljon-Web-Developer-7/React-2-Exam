@@ -14,7 +14,7 @@ const Pages = () => {
           <Route path="" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />{" "}
-          <Route path="/product/:id" element={<Product />} />
+          <Route path="/product" element={<Product />} />
         </Route>
       </Routes>
     </div>
