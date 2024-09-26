@@ -84,12 +84,13 @@ const Products = () => {
     e = e.target.value;
     if (e == "rating") {
       setCheckRating("&ratings_stars=4.2");
+      setCheckPrice("");
     } else if (e == "price") {
       setCheckPrice("&_sort=price");
       setCheckRating("");
     } else {
       setCheckPrice("");
-      setCheckPrice("");
+      setCheckRating("");
     }
   };
   return (
@@ -102,7 +103,7 @@ const Products = () => {
             onChange={(e) => handleFilter(e)}
             className="filter__optoins border-none outline-none bg-transparent"
           >
-            <option value="">Sort By</option>
+            <option value="all">Sort By</option>
             <option value="rating">Rating 4.2 ^</option>
             <option value="price">Price</option>
           </select>
