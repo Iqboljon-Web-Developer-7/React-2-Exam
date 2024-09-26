@@ -12,8 +12,11 @@ import { FaOpencart } from "react-icons/fa";
 import { RiMenu5Line } from "react-icons/ri";
 import { IoSearchOutline } from "react-icons/io5";
 import { FiUser } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const cart = useSelector((state) => state.cart.value);
+
   // Mobile header
   const [isOpen, setIsOpen] = useState(false);
 
@@ -70,11 +73,12 @@ const Header = () => {
             <FiUser />
           </Link>
           <Link to={"/cart"} className="animate-fade-in-top-2 relative">
-            <FaOpencart /> {/* {cart.length > 0 && ( */}
-            <span className="absolute text-slate-200 inset-[-.3rem_-.3rem_auto_auto] h-4 min-w-4 text-[.8rem] rounded-full flex items-center justify-center bg-slate-500">
-              {/* {cart?.length} */}2
-            </span>
-            {/* )} */}
+            <FaOpencart />
+            {cart.length > 0 && (
+              <span className="absolute text-slate-200 inset-[-.3rem_-.3rem_auto_auto] h-4 min-w-4 text-[.8rem] rounded-full flex items-center justify-center bg-slate-500">
+                {cart?.length}
+              </span>
+            )}
           </Link>
           <RiMenu5Line
             className="md:hidden text-2xl sm:text-3xl"

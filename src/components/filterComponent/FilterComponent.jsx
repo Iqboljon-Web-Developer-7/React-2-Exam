@@ -1,7 +1,14 @@
 import React, { useRef, useState } from "react";
 import { FaCaretUp } from "react-icons/fa";
 
-const FilterComponent = ({ brands, colors, onBrandChange, onColorChange }) => {
+const FilterComponent = ({
+  brands,
+  colors,
+  onBrandChange,
+  onColorChange,
+  highlightColor,
+  setHighlightColor,
+}) => {
   const [expand, setExpand] = useState({
     brands: false,
     colors: false,
@@ -78,16 +85,20 @@ const FilterComponent = ({ brands, colors, onBrandChange, onColorChange }) => {
         </p>
         <div className="flex flex-wrap gap-2 p-1">
           {colors?.map((color, index) => (
-            <input
-              readOnly={true}
+            <div
               key={index}
-              className="w-6 h-6 shadow-md rounded-full cursor-pointer focus:outline-slate-900"
               style={{
                 backgroundColor: color,
-                border: `.1rem solid ${color == "#FFFFFF" && "#00000044"}`,
+                borderColor: `${color == "#FFFFFF" && "#00000033"}`,
               }}
-              onClick={() => onColorChange(color)}
-            ></input>
+              className={`w-6 h-6 shadow-md rounded-full cursor-pointer border-2 border-transparent ${
+                highlightColor.id == index && "scale-90 border-slate-900"
+              }`}
+              onClick={() => {
+                setHighlightColor((p) => ({ active: !p.active, id: index }));
+                onColorChange(color);
+              }}
+            ></div>
           ))}
         </div>
       </div>

@@ -3,47 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 export const cart = createSlice({
   name: "cart",
   initialState: {
-    value: [
-      {
-        id: 1,
-        fname: "Iqboljon",
-        lname: "Ummataliyev",
-        phone: +998997976757,
-        userName: "Iqboljon-Developer",
-        gender: "male",
-      },
-      {
-        id: 2,
-        fname: "Islombek",
-        lname: "Ummataliyev",
-        phone: +998940952400,
-        userName: "Islombek-Developer",
-        gender: "male",
-      },
-      {
-        id: 3,
-        fname: "Boburjon",
-        lname: "O'lponov",
-        phone: +79774549489,
-        userName: "Boburjon-Developer",
-        gender: "male",
-      },
-      {
-        id: 4,
-        fname: "Hojimurod",
-        lname: "O'lponov",
-        phone: +998888331215,
-        userName: "Hojimurod-Developer",
-        gender: "male",
-      },
-    ],
+    value: JSON.parse(localStorage.getItem("cartList")) || [],
   },
   reducers: {
     add: (state, action) => {
-      state.value = [...state.value, action.payload.cart];
+      if (state.value.findIndex((item) => item.id == action.payload.id) < 1) {
+        state.value = [...state.value, { ...action.payload, quantity: 1 }];
+      }
+      localStorage.setItem("cartList", JSON.stringify(state.value));
     },
     remove: (state, action) => {
-      state.value = state.value.filter((item) => item.id != action.payload.id);
+      state.value = state.value.filter((item) => item.id != action.payload);
+      localStorage.setItem("cartList", JSON.stringify(state.value));
     },
     update: (state, action) => {
       state.value = state.value.map((item, idx) =>

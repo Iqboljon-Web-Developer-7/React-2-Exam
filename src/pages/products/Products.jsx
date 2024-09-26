@@ -6,16 +6,26 @@ import {
   useGetColorsQuery,
   useGetProductsQuery,
 } from "@/redux/api/proucts";
+import { cart } from "@/redux/slices/cart-slice";
 import React, { useEffect, useState } from "react";
 
 const Products = () => {
   const [brandsUrl, setBrandsUrl] = useState("");
   const [colorsUrl, setColorsUrl] = useState("");
+  const [prevColor, setPrevColor] = useState("");
+  const [highlightColor, setHighlightColor] = useState({
+    active: false,
+    id: -1,
+  });
+  const [checkRating, setCheckRating] = useState("");
+  const [checkPrice, setCheckPrice] = useState("");
   const { data, isFetching } = useGetProductsQuery({
     page: 1,
     limit: 8,
     brand: brandsUrl,
     color: colorsUrl,
+    rating: checkRating,
+    price: checkPrice,
   });
 
   const { data: brands } = useGetBrandsQuery();
@@ -48,11 +58,33 @@ const Products = () => {
     }
   }, [selectedBrands]);
 
-  let prevColor = "";
   const handleColorChange = (color) => {
-    color = color.split("");
-    color.shift();
-    setColorsUrl(`&color_options_like=%23${color.join("")}`);
+    setPrevColor(color);
+
+    if (prevColor == color) {
+      setColorsUrl("all");
+      setPrevColor("");
+      setHighlightColor((p) => ({ ...p, id: -1 }));
+    } else {
+      color = color.split("");
+      color.shift();
+      setColorsUrl(`&color_options_like=%23${color.join("")}`);
+    }
+  };
+
+  const handleFilter = (e) => {
+    e = e.target.value;
+    if (e == "rating") {
+      setCheckRating("&ratings_stars=4.2");
+    } else if (e == "price") {
+      setCheckPrice("&_sort=price");
+      setCheckRating("");
+    } else {
+      console.log(e);
+
+      setCheckPrice("");
+      setCheckPrice("");
+    }
   };
 
   return (
@@ -61,8 +93,12 @@ const Products = () => {
       <div className="filter py-8 bg-[#D5F8CF]">
         <div className="wrapper text-[#0BA42D] flex items-center justify-between">
           <h3 className="filter__heading text-xl font-Hammer">Filter By:</h3>
-          <select className="filter__optoins border-none outline-none bg-transparent">
-            <option value="rating">Rating</option>
+          <select
+            onChange={(e) => handleFilter(e)}
+            className="filter__optoins border-none outline-none bg-transparent"
+          >
+            <option value="">Sort By</option>
+            <option value="rating">Rating 4.2 ^</option>
             <option value="price">Price</option>
           </select>
         </div>
@@ -75,12 +111,14 @@ const Products = () => {
               colors={colors}
               onBrandChange={handleBrandChange}
               onColorChange={handleColorChange}
+              highlightColor={highlightColor}
+              setHighlightColor={setHighlightColor}
             />
           </div>
           <div className="products__container grid md:grid-cols-2 lg:grid-cols-3 w-2/3 gap-3">
             {!isFetching
               ? data.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard cart={cart} key={product.id} product={product} />
                 ))
               : new Array(10).fill().map((_, idx) => (
                   <div

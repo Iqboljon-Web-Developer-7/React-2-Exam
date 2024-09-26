@@ -1,8 +1,11 @@
+import { add } from "@/redux/slices/cart-slice";
 import React from "react";
 import { IoCartOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  const dispatch = useDispatch();
   return (
     <div className="bg-white p-4 rounded-lg mt-4 border-2 border-transparent hover:border-slate-400 hover:shadow-md duration-200">
       <img
@@ -24,7 +27,10 @@ const ProductCard = ({ product }) => {
         ))}
       </div>
       <p className="font-bold text-xl mt-2">${product.price.toFixed(2)}</p>
-      <button className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md hover:bg-green-600 flex items-center justify-center gap-2">
+      <button
+        onClick={() => dispatch(add(product))}
+        className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md hover:bg-green-600 flex items-center justify-center gap-2"
+      >
         <IoCartOutline /> Add to Cart
       </button>
     </div>
