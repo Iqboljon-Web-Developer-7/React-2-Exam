@@ -33,7 +33,7 @@ const Products = () => {
   const { data: allData } = useGetProductsQuery({ limit: 99 });
   useEffect(() => {
     setTotal(allData?.length);
-    data.length < 6 && setTotal(1);
+    data?.length < 6 && setTotal(1);
   }, [allData, data]);
 
   const { data: brands } = useGetBrandsQuery();
