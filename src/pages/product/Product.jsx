@@ -11,28 +11,38 @@ import { IoCartOutline } from "react-icons/io5";
 const Product = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data } = useGetProductQuery({ id: searchParams.get("id") });
-  const [quantity, setQuantity] = useState({ quantity: 1, idx: 0 });
+  const [quantity, setQuantity] = useState({
+    quantity: 1,
+    idx: searchParams.get("id"),
+  });
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.value);
 
   useEffect(() => {
     let changedObj = {};
-    let changedCart = cart.map((item) => {
-      let res;
+    cart.map((item) => {
       if (item.id == quantity.idx) {
-        res = { ...item, quantity: quantity.quantity };
         changedObj = { ...item, quantity: quantity.quantity };
+        return { ...item, quantity: quantity.quantity };
       } else {
-        res = item;
+        return item;
       }
-      return res;
     });
 
-    console.log("Changed cart", changedCart);
-
-    localStorage.setItem("cartList", JSON.stringify(changedCart));
+    console.log(changedObj);
     dispatch(update(changedObj));
   }, [quantity]);
+
+  useEffect(() => {
+    cart.map((item) => {
+      if (item.id == quantity.idx) {
+        setQuantity((p) => ({ ...p, quantity: item.quantity }));
+        return { ...item, quantity: quantity.quantity };
+      } else {
+        return item;
+      }
+    });
+  }, []);
 
   return (
     <section className="product wrapper">

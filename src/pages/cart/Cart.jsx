@@ -1,4 +1,4 @@
-import { remove } from "@/redux/slices/cart-slice";
+import { remove, update } from "@/redux/slices/cart-slice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,15 +14,20 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const updateQuantity = (id, amount, btn = true) => {
-    setCartItem((prev) =>
-      btn
-        ? prev.map((item) =>
-            item.id == id ? { ...item, quantity: item.quantity + amount } : item
-          )
-        : prev.map((item) =>
-            item.id == id ? { ...item, quantity: amount } : item
-          )
-    );
+    let helper = {};
+    let res = btn
+      ? cartItem.map((item) => {
+          helper = { ...item, quantity: item.quantity + amount };
+          return item.id == id ? helper : item;
+        })
+      : cartItem.map((item) =>
+          item.id == id ? { ...item, quantity: amount } : item
+        );
+    setCartItem(res);
+    console.log(res);
+
+    console.log(helper);
+    dispatch(update(helper));
   };
 
   useEffect(() => {

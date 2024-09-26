@@ -17,15 +17,11 @@ export const cart = createSlice({
       localStorage.setItem("cartList", JSON.stringify(state.value));
     },
     update: (state, action) => {
-      console.log(action.payload);
-
       state.value = state.value.map((item, idx) =>
         item.id == action.payload.id
           ? (state.value[idx] = action.payload)
           : item
       );
-      console.log(state.value);
-
       localStorage.setItem("cartList", JSON.stringify(state.value));
     },
   },
