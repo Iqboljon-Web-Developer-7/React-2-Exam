@@ -104,8 +104,8 @@ const Products = () => {
         </div>
       </div>
       <div className="wrapper">
-        <div className="products flex justify-between">
-          <div className="products__filters w-1/5">
+        <div className="products flex flex-col md:flex-row justify-between">
+          <div className="products__filters md:w-2/6">
             <FilterComponent
               brands={brands}
               colors={colors}
@@ -115,7 +115,7 @@ const Products = () => {
               setHighlightColor={setHighlightColor}
             />
           </div>
-          <div className="products__container grid md:grid-cols-2 lg:grid-cols-3 w-2/3 gap-3">
+          <div className="products__container grid sm:grid-cols-2 lg:grid-cols-3 md:w-2/3 gap-3">
             {!isFetching
               ? data.map((product) => (
                   <ProductCard cart={cart} key={product.id} product={product} />

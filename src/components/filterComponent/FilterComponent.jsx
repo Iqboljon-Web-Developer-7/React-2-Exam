@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaCaretUp } from "react-icons/fa";
 
 const FilterComponent = ({
@@ -12,10 +12,19 @@ const FilterComponent = ({
   const [expand, setExpand] = useState({
     brands: false,
     colors: false,
+    sorBy: false,
   });
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.innerWidth < 768 &&
+        setExpand({ brands: false, colors: false, sorBy: false });
+    });
+  }, []);
 
   const brandsContainer = useRef();
   const colorsContainer = useRef();
+  const sorBy = useRef();
 
   const brandStyles = {
     height: expand.brands
@@ -27,6 +36,10 @@ const FilterComponent = ({
     height: expand.colors
       ? `${colorsContainer?.current?.scrollHeight}px`
       : "40px",
+  };
+
+  const sortByStyle = {
+    height: expand.sorBy ? `${sorBy?.current?.scrollHeight}px` : "40px",
   };
 
   return (
@@ -49,20 +62,22 @@ const FilterComponent = ({
             }`}
           />
         </p>
-        {brands?.map((brand, index) => (
-          <div key={index} className="flex items-center">
-            <input
-              type="checkbox"
-              id={brand}
-              name="brand"
-              onChange={onBrandChange}
-              className="accent-green-500"
-            />
-            <label htmlFor={brand} className="ml-2">
-              {brand}
-            </label>
-          </div>
-        ))}
+        <div className="grid grid-cols-2  sm:grid-cols-4 md:block">
+          {brands?.map((brand, index) => (
+            <div key={index} className=" md:flex items-center">
+              <input
+                type="checkbox"
+                id={brand}
+                name="brand"
+                onChange={onBrandChange}
+                className="accent-green-500"
+              />
+              <label htmlFor={brand} className="ml-2">
+                {brand}
+              </label>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div
@@ -103,14 +118,29 @@ const FilterComponent = ({
         </div>
       </div>
 
-      {/* Sort Section */}
-      <div>
-        <p className="font-semibold">SORT BY</p>
-        <select className="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm">
-          <option>Best match</option>
-          <option>New</option>
-          <option>Name</option>
-        </select>
+      <div
+        ref={sorBy}
+        style={sortByStyle}
+        className="flex justify-between flex-col duration-200 md:block overflow-hidden"
+      >
+        <p
+          onClick={() => {
+            setExpand((p) => ({ ...p, sorBy: !p.sorBy }));
+          }}
+          className="font-semibold flex justify-between"
+        >
+          SORT BY{" "}
+          <FaCaretUp
+            className={`duration-200 ${
+              expand.sorBy ? "rotate-0" : "rotate-180"
+            }`}
+          />
+        </p>
+        <div className="mt-3">
+          <p>Best match</p>
+          <p>New</p>
+          <p>Name</p>
+        </div>
       </div>
     </div>
   );
